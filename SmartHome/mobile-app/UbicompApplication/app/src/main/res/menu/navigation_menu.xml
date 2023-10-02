@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:contentDescription="home fragment"
+        android:icon="@drawable/smart_home"
+        android:title="@string/home" />
+
+    <item
+        android:id="@+id/hvacFragment"
+        android:icon="@drawable/hvac"
+        android:contentDescription="hvac fragment"
+        android:title="@string/hvac" />
+
+    <item
+        android:id="@+id/lightsFragment"
+        android:icon="@drawable/lightbulb"
+        android:contentDescription="lights fragment"
+        android:title="@string/lights_menu" />
+
+    <item
+        android:id="@+id/assistantFragment"
+        android:icon="@drawable/assistant"
+        android:contentDescription="assistant fragment"
+        android:title="@string/assistant" />
+</menu>
