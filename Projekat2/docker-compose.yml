@@ -71,6 +71,7 @@ services:
     build:
       context: ./app
     image: iotapp
+    restart: always
     networks:
       ubicomp:
     privileged: true
