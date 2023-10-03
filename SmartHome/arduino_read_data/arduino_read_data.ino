@@ -177,7 +177,7 @@ void loop() {
   Serial.print(magZ);
   Serial.print(',');
   Serial.print(gyrX);
-  Serial.print(',');ryr0
+  Serial.print(',');
   Serial.print(gyrY);
   Serial.print(',');
   Serial.print(gyrZ);
