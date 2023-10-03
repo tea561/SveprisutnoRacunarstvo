@@ -35,8 +35,11 @@ def on_connect(client, userdata, flags, rc):
         print("${client}: Connected to MQTT broker")
     else:
         print("${client}: Failed to connect to MQTT broker")
+        
+def on_disconnect(client, userdate, rc):
+    client.connect(edge_host, int(edge_mqtt_port), 60) 
 
-temperature_client.username_pw_set(username=temperature_access_token)
+temperature_client.username_pw_set(username=thermostat_access_token)
 pressure_client.username_pw_set(username=pressure_access_token)
 proximity_client.username_pw_set(username=proximity_access_token)
 imu_client.username_pw_set(username=imu_access_token)
@@ -47,6 +50,12 @@ pressure_client.on_connect = on_connect
 proximity_client.on_connect = on_connect
 imu_client.on_connect = on_connect
 client.on_connect = on_connect
+
+temperature_client.on_disconnect = on_disconnect
+pressure_client.on_disconnect = on_disconnect
+proximity_client.on_disconnect = on_disconnect
+imu_client.on_disconnect = on_disconnect
+client.on_disconnect = on_disconnect
 
 temperature_client.connect(edge_host, int(edge_mqtt_port), 60)
 pressure_client.connect(edge_host, int(edge_mqtt_port), 60)
@@ -65,38 +74,37 @@ try:
 
             timestamp = rows[0]
 
-            lps_sensor = json.dumps({
+            pressure = json.dumps({
                 "timestamp": timestamp,
                 "pressure": rows[1]
             })
 
-            hts_sensor = json.dumps({
+            temperature = json.dumps({
                 "timestamp": timestamp,
                 "temperature": rows[2],
-                "humidity": rows[3]
             })
 
-            apds_sensor = json.dumps({
+            proximity = json.dumps({
                 "timestamp": timestamp,
-                "proximity": rows[4],
-                "gesture": rows[5],
-                "r": rows[6],
-                "g": rows[7],
-                "b": rows[8],
-                "a": rows[9],
+                "proximity": rows[3],
+                "gesture": rows[4],
+                "r": rows[5],
+                "g": rows[6],
+                "b": rows[7],
+                "a": rows[8],
             })
 
             imu = json.dumps({
                 "timestamp": timestamp,
-                "accX": rows[10],
-                "accY": rows[11],
-                "accZ": rows[12],
-                "magX": rows[13],
-                "magY": rows[14],
-                "magZ": rows[15],
-                "gyrX": rows[16],
-                "gyrY": rows[17],
-                "gyrZ": rows[18]
+                "accX": rows[9],
+                "accY": rows[10],
+                "accZ": rows[11],
+                "magX": rows[12],
+                "magY": rows[13],
+                "magZ": rows[14],
+                "gyrX": rows[15],
+                "gyrY": rows[16],
+                "gyrZ": rows[17]
             })
 
             payload = json.dumps({
@@ -119,8 +127,8 @@ try:
             print(f"Published - pressure: {pressure}")
             proximity_client.publish(telemetry_topic, proximity)
             print(f"Published - proximity: {proximity}")
-            acceleration_client.publish(telemetry_topic, acceleration)
-            print(f"Published - acceleration: {acceleration}")
+            imu_client.publish(telemetry_topic, imu)
+            print(f"Published - imu: {imu}")
             client.publish(telemetry_topic, payload)
             print(f"Published: {payload}")
             f.flush()
@@ -130,4 +138,4 @@ except KeyboardInterrupt:
     temperature_client.disconnect()
     pressure_client.disconnect()
     proximity_client.disconnect()
-    acceleration_client.disconnect()
+    imu_client.disconnect()
